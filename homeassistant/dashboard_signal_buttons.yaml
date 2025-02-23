@@ -1,0 +1,40 @@
+- type: horizontal-stack
+    cards:
+      - show_name: true
+        show_icon: true
+        type: button
+        tap_action:
+          action: toggle
+        entity: switch.magic_clock_light_red
+        icon: mdi:alarm-light
+        name: Rotes Signal
+        show_state: true
+        card_mod:
+          class: button-capped-right
+          style: |
+            ha-card.button-capped-right {
+              {% if is_state('switch.magic_clock_light_red', 'on') %}
+                background-color: red;
+              {% else %}
+                color: red;
+              {% endif %};
+            }
+      - show_name: true
+        show_icon: true
+        type: button
+        tap_action:
+          action: toggle
+        entity: switch.magic_clock_light_green
+        icon: mdi:alarm-light
+        name: Grünes Signal
+        show_state: true
+        card_mod:
+          class: button-capped-left
+          style: |
+            ha-card.button-capped-left {
+              {% if is_state('switch.magic_clock_light_green', 'on') %}
+                background-color: green;
+              {% else %}
+                color: green;
+              {% endif %};
+            }

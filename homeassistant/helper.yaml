@@ -1,0 +1,19 @@
+input_select:
+  input_select.magicclock_positionen:
+    name: Magic Clock Position
+    options:
+      - Home
+      - Saloon
+      - Friends
+      - Store
+      - on the Run
+      - working
+      - Family
+      - Outhouse
+      - asleep
+    icon: mdi:gauge
+
+input_boolean:
+  input_boolean.magicclock_sync_active:
+    name: MagicClock Sync Active
+    icon: mdi:gauge

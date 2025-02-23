@@ -1,0 +1,91 @@
+alias: "[MagicClock] Zeiger nach Status setzen"
+description: ""
+triggers:
+  - trigger: state
+    entity_id:
+      - input_select.magicclock_positionen
+conditions: []
+actions:
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{trigger.to_state.state == 'Home'}}"
+        sequence:
+          - action: number.set_value
+            data:
+              value: "-100"
+            target:
+              entity_id: number.magic_clock_zeigerstellung
+      - conditions:
+          - condition: template
+            value_template: "{{trigger.to_state.state == 'Saloon'}}"
+        sequence:
+          - action: number.set_value
+            data:
+              value: "-75"
+            target:
+              entity_id: number.magic_clock_zeigerstellung
+      - conditions:
+          - condition: template
+            value_template: "{{trigger.to_state.state == 'Friends'}}"
+        sequence:
+          - action: number.set_value
+            data:
+              value: "-50"
+            target:
+              entity_id: number.magic_clock_zeigerstellung
+      - conditions:
+          - condition: template
+            value_template: "{{trigger.to_state.state == 'Store'}}"
+        sequence:
+          - action: number.set_value
+            data:
+              value: "-25"
+            target:
+              entity_id: number.magic_clock_zeigerstellung
+      - conditions:
+          - condition: template
+            value_template: "{{trigger.to_state.state == 'on the Run'}}"
+        sequence:
+          - action: number.set_value
+            data:
+              value: "0"
+            target:
+              entity_id: number.magic_clock_zeigerstellung
+      - conditions:
+          - condition: template
+            value_template: "{{trigger.to_state.state == 'working'}}"
+        sequence:
+          - action: number.set_value
+            data:
+              value: "25"
+            target:
+              entity_id: number.magic_clock_zeigerstellung
+      - conditions:
+          - condition: template
+            value_template: "{{trigger.to_state.state == 'Family'}}"
+        sequence:
+          - action: number.set_value
+            data:
+              value: "50"
+            target:
+              entity_id: number.magic_clock_zeigerstellung
+      - conditions:
+          - condition: template
+            value_template: "{{trigger.to_state.state == 'Outhouse'}}"
+        sequence:
+          - action: number.set_value
+            data:
+              value: "75"
+            target:
+              entity_id: number.magic_clock_zeigerstellung
+      - conditions:
+          - condition: template
+            value_template: "{{trigger.to_state.state == 'asleep'}}"
+        sequence:
+          - action: number.set_value
+            data:
+              value: "100"
+            target:
+              entity_id: number.magic_clock_zeigerstellung
+mode: single

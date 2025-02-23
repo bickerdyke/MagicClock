@@ -1,0 +1,156 @@
+esphome:
+  name: magic-clock
+  friendly_name: Magic Clock
+  on_boot:
+    then:
+      - delay: 4s
+      - servo.write:
+          id: servo_dial
+          level: 100%
+      - delay: 4s
+      - servo.write:
+          id: servo_dial
+          level: -100%
+      - delay: 4s
+      - servo.write:
+          id: servo_dial
+          level: 0%
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret magicclock_ApiKey
+
+ota:
+  password: !secret magicclock_OtaSecret
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Magic-Clock Setup"
+    password: "Foxtrott1308"
+
+captive_portal:
+
+time:
+  - platform: sntp
+    id: sntp_time
+
+wireguard:
+  private_key: !secret magicclock_privatekey
+  peer_preshared_key: !secret magicclock_presharedkey
+  address: 192.168.42.202
+  netmask: 255.255.255.0
+  peer_endpoint: !secret magicclock_wg_endpoint
+  peer_port: 51068
+  peer_public_key: !secret magicclock_publickey
+  peer_persistent_keepalive: 55s
+  update_interval: 45s
+  peer_allowed_ips:
+    - 192.168.42.0/24
+    - 0.0.0.0/24
+
+# GPIO Funktion	 Breadboard-Pin
+# 5V: --> Servo 		--> 1
+# GPIO13: PWM Servo	--> 5
+# GND: Masseschiene	--> 6
+# GPIO27: LED 1		--> 9		--> 30
+# GPIO26: LED 2		--> 10		--> 31
+# GPIO25: Switch 1	--> 11		--> 32
+# GPIO33: Switch 2	--> 12		--> 33
+
+status_led:
+  pin: GPIO2 # onboard LED
+
+switch:
+  - platform: gpio
+    pin: GPIO27
+    name: Light Red
+    id: led_red
+
+  - platform: gpio
+    pin: GPIO26
+    name: Light Green
+    id: led_green
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO25
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+    name: "Button Red"
+    id: button_red
+    #device_class: none # default: none
+    on_release:
+      then:
+        - switch.toggle: led_red
+
+  - platform: gpio
+    pin:
+      number: GPIO33
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+    name: "Button Green"
+    id: button_green
+    #device_class: none # default: none
+    on_release:
+      then:
+        - switch.toggle: led_green
+
+# Servo Configuration
+
+output: # physical servo output
+  - platform: ledc
+    id: servo_pwm_output
+    pin: GPIO13
+    frequency: 50 Hz
+
+servo: # servo component
+  - id: servo_dial
+    output: servo_pwm_output
+    #min_level: 3.2%
+    #max_level: 11.8%
+    transition_length: 1s
+    #auto_detach_time: 5s
+
+number: # Homneassistant Entity controlling servo
+  - platform: template
+    name: Zeigerstellung
+    id: zeiger
+    min_value: -100
+    initial_value: 0
+    max_value: 100
+    step: 5
+    optimistic: true
+    set_action:
+      then:
+        - servo.write:
+            id: servo_dial
+            level: !lambda "return x / 100.0;"
+        - if:
+            condition:
+              not:
+                - number.in_range:
+                    id: zeiger
+                    above: 2.0
+                    below: 90.0
+            then:
+              - delay: 3s
+              - logger.log: "detaching servo in End-position"
+              - servo.detach: servo_dial

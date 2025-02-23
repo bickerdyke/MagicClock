@@ -1,0 +1,77 @@
+alias: "[MagicClock] Zeigerstatus ermiteln"
+description: ""
+triggers:
+  - trigger: state
+    id: zoneTrigger
+    entity_id:
+      - person.JohnDoe
+    not_to: null
+  - trigger: state
+    id: lightTrigger
+    entity_id:
+      - light.bathroom_1
+      - light.bathroom_2
+    not_to: null
+  - trigger: state
+    id: statusTrigger
+    entity_id:
+      - input_select.JohnDoe_schlafstatus
+    not_to: null
+conditions:
+  - condition: state
+    entity_id: input_boolean.magicclock_sync_active
+    state: "on"
+actions:
+  - variables:
+      dial_status: |-
+        {% if states('person.JohnDoe') in ['Zone for a friend'] %}
+          Friends
+        {% elif states('person.JohnDoe') in [
+          'Irish Pub',
+          'Non-Irish Pub'] %}
+          Saloon
+        {% elif states('person.JohnDoe') in [
+          'A supermarket',
+          'another supoermarket'] %}
+          Store
+        {% elif states('person.JohnDoe') in ['Office'] %}
+          working
+        {% elif states('person.JohnDoe') in [
+          'John Doe's Parents',
+          'John Doe's Brother'] %}
+          Family
+        {% elif states('person.JohnDoe') == 'home' and (
+          states('light.bathroom_1') == 'on' or 
+          states('light.bathroom_"') == 'on'
+          ) %}
+          Outhouse
+        {% elif states('input_select.JohnDoe_schlafstatus') in [
+          'Awake',
+          'go to bed',
+          'awoken'] %}
+          Home
+        {% elif states('input_select.JohnDoe_schlafstatus') in [
+          'asleep',
+          'Snoring',
+          'awart Alarm Phase'] %}
+          asleep
+        {% else %}
+          on the Run
+        {% endif %}
+  - action: input_select.select_option
+    metadata: {}
+    data:
+      option: "{{ dial_status }}"
+    target:
+      entity_id: input_select.magicclock_positionen
+  - action: notify.mobile_app_john_cellphone
+    metadata: {}
+    data:
+      title: Magic Clock Update
+      message: Dial is on <b>{{ dial_status }}</b>
+      data:
+        clickAction: /dashboard-umgebung/bewohner
+        tag: magic-clock-update
+        timeout: 3600
+        notification_icon: mdi:gauge
+mode: single

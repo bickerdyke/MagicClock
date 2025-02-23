@@ -1,0 +1,69 @@
+alias: "[MagicClock] Signale mit Stehlampe anzeigen"
+description: ""
+triggers:
+  - trigger: state
+    entity_id:
+      - switch.magic_clock_light_green
+    to: "on"
+    id: greenOn
+  - trigger: state
+    entity_id:
+      - switch.magic_clock_light_red
+    id: redOn
+    to: "on"
+  - trigger: state
+    entity_id:
+      - switch.magic_clock_light_green
+      - switch.magic_clock_light_red
+    id: signalOff
+    to: "off"
+conditions:
+  - condition: state
+    entity_id: input_boolean.magicclock_sync_active
+    state: "on"
+  - condition: state
+    entity_id: alarm_control_panel.haus_status
+    state: armed_home
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - signalOff
+        sequence:
+          - action: light.turn_off
+            metadata: {}
+            target:
+              device_id: ++YOUR DEVICE ID++
+            data: {}
+      - conditions:
+          - condition: trigger
+            id:
+              - redOn
+        sequence:
+          - action: light.turn_on
+            metadata: {}
+            data:
+              rgb_color:
+                - 255
+                - 0
+                - 0
+              brightness_pct: 100
+            target:
+              device_id: ++YOUR DEVICE ID++
+      - conditions:
+          - condition: trigger
+            id:
+              - greenOn
+        sequence:
+          - action: light.turn_on
+            metadata: {}
+            data:
+              rgb_color:
+                - 0
+                - 255
+                - 0
+              brightness_pct: 100
+            target:
+              device_id: ++YOUR DEVICE ID++
+mode: single
