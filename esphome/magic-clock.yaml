@@ -148,9 +148,9 @@ number: # Homneassistant Entity controlling servo
               not:
                 - number.in_range:
                     id: zeiger
-                    above: 2.0
+                    above: 3.0
                     below: 90.0
             then:
-              - delay: 3s
+              - delay: 5s
               - logger.log: "detaching servo in End-position"
               - servo.detach: servo_dial
