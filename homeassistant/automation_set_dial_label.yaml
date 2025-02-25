@@ -17,6 +17,10 @@ triggers:
     entity_id:
       - input_select.JohnDoe_schlafstatus
     not_to: null
+  - trigger: state
+    id: calendarTrigger
+    entity_id:
+      - calendar.johndoe_gmail_com
 conditions:
   - condition: state
     entity_id: input_boolean.magicclock_sync_active
@@ -35,6 +39,13 @@ actions:
           'another supoermarket'] %}
           Store
         {% elif states('person.JohnDoe') in ['Office'] %}
+          working
+        {% elif states('calendar.johndoe_gmail_com') == 'on' and
+          not state_attr('calendar.johndoe_gmail_com', 'all_day')|bool and (
+            'audit' in state_attr('calendar.johndoe_gmail_com', 'message')|lower or 
+            'jour fixe' in state_attr('calendar.johndoe_gmail_com', 'message')|lower or
+            'meeting' in state_attr('calendar.johndoe_gmail_com', 'message')|lower
+          ) %}
           working
         {% elif states('person.JohnDoe') in [
           'John Doe's Parents',

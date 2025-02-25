@@ -126,7 +126,7 @@ servo: # servo component
     output: servo_pwm_output
     #min_level: 3.2%
     #max_level: 11.8%
-    transition_length: 1s
+    transition_length: 1.5s
     #auto_detach_time: 5s
 
 number: # Homneassistant Entity controlling servo
@@ -143,14 +143,14 @@ number: # Homneassistant Entity controlling servo
         - servo.write:
             id: servo_dial
             level: !lambda "return x / 100.0;"
+        - delay: 3s
         - if:
             condition:
               not:
                 - number.in_range:
                     id: zeiger
-                    above: 3.0
+                    above: -90.0
                     below: 90.0
             then:
-              - delay: 5s
               - logger.log: "detaching servo in End-position"
               - servo.detach: servo_dial
