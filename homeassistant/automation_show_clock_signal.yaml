@@ -3,18 +3,18 @@ description: ""
 triggers:
   - trigger: state
     entity_id:
-      - switch.magic_clock_light_green
+      - switch.magic_clock_light_yellow
     to: "on"
-    id: greenOn
+    id: yellowOn
   - trigger: state
     entity_id:
-      - switch.magic_clock_light_red
-    id: redOn
+      - switch.magic_clock_light_blue
+    id: blueOn
     to: "on"
   - trigger: state
     entity_id:
-      - switch.magic_clock_light_green
-      - switch.magic_clock_light_red
+      - switch.magic_clock_light_yellow
+      - switch.magic_clock_light_blue
     id: signalOff
     to: "off"
 conditions:
@@ -39,7 +39,7 @@ actions:
       - conditions:
           - condition: trigger
             id:
-              - redOn
+              - yellowOn
         sequence:
           - action: light.turn_on
             metadata: {}
@@ -54,7 +54,7 @@ actions:
       - conditions:
           - condition: trigger
             id:
-              - greenOn
+              - blueOn
         sequence:
           - action: light.turn_on
             metadata: {}

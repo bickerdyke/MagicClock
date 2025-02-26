@@ -5,18 +5,18 @@
         type: button
         tap_action:
           action: toggle
-        entity: switch.magic_clock_light_red
+        entity: switch.magic_clock_light_blue
         icon: mdi:alarm-light
-        name: Rotes Signal
+        name: Blaues Signal
         show_state: true
         card_mod:
           class: button-capped-right
           style: |
             ha-card.button-capped-right {
-              {% if is_state('switch.magic_clock_light_red', 'on') %}
-                background-color: red;
+              {% if is_state('switch.magic_clock_light_blue', 'on') %}
+                background-color: blue;
               {% else %}
-                color: red;
+                color: blue;
               {% endif %};
             }
       - show_name: true
@@ -24,17 +24,17 @@
         type: button
         tap_action:
           action: toggle
-        entity: switch.magic_clock_light_green
+        entity: switch.magic_clock_light_yellow
         icon: mdi:alarm-light
-        name: Grünes Signal
+        name: Gelbes Signal
         show_state: true
         card_mod:
           class: button-capped-left
           style: |
             ha-card.button-capped-left {
-              {% if is_state('switch.magic_clock_light_green', 'on') %}
-                background-color: green;
+              {% if is_state('switch.magic_clock_light_yellow', 'on') %}
+                background-color: yellow;
               {% else %}
-                color: green;
+                color: yellow;
               {% endif %};
             }

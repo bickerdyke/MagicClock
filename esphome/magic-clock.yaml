@@ -33,8 +33,11 @@ ota:
   password: !secret magicclock_OtaSecret
 
 wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
+  networks:
+    - ssid: !secret wifi_ssid
+      password: !secret wifi_password
+    - ssid: !secret redlion_wifi_ssid
+      password: !secret redlion_wifi_password
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
@@ -76,13 +79,13 @@ status_led:
 switch:
   - platform: gpio
     pin: GPIO27
-    name: Light Red
-    id: led_red
+    name: Light Blue
+    id: led_blue
 
   - platform: gpio
     pin: GPIO26
-    name: Light Green
-    id: led_green
+    name: Light Yellow
+    id: led_yellow
 
 binary_sensor:
   - platform: gpio
@@ -92,12 +95,12 @@ binary_sensor:
       mode:
         input: true
         pullup: true
-    name: "Button Red"
-    id: button_red
+    name: "Button Blue"
+    id: button_blue
     #device_class: none # default: none
     on_release:
       then:
-        - switch.toggle: led_red
+        - switch.toggle: led_blue
 
   - platform: gpio
     pin:
@@ -106,12 +109,12 @@ binary_sensor:
       mode:
         input: true
         pullup: true
-    name: "Button Green"
-    id: button_green
+    name: "Button Yellow"
+    id: button_yellow
     #device_class: none # default: none
     on_release:
       then:
-        - switch.toggle: led_green
+        - switch.toggle: led_yellow
 
 # Servo Configuration
 
