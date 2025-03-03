@@ -66,12 +66,12 @@ wireguard:
 
 # GPIO Funktion	 Breadboard-Pin
 # 5V: --> Servo 		--> 1
-# GPIO13: PWM Servo	--> 5
+# GPIO17: PWM Servo -
 # GND: Masseschiene	--> 6
 # GPIO27: LED 1		--> 9		--> 30
-# GPIO26: LED 2		--> 10		--> 31
+# GPIO21: LED 2		--> 10		--> 31
 # GPIO25: Switch 1	--> 11		--> 32
-# GPIO33: Switch 2	--> 12		--> 33
+# GPIO18: Switch 2	--> 12		--> 33
 
 status_led:
   pin: GPIO2 # onboard LED
@@ -83,7 +83,7 @@ switch:
     id: led_blue
 
   - platform: gpio
-    pin: GPIO26
+    pin: GPIO21
     name: Light Yellow
     id: led_yellow
 
@@ -104,7 +104,7 @@ binary_sensor:
 
   - platform: gpio
     pin:
-      number: GPIO33
+      number: GPIO18
       inverted: true
       mode:
         input: true
@@ -121,7 +121,7 @@ binary_sensor:
 output: # physical servo output
   - platform: ledc
     id: servo_pwm_output
-    pin: GPIO13
+    pin: GPIO17
     frequency: 50 Hz
 
 servo: # servo component
