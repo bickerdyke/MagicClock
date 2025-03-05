@@ -139,7 +139,7 @@ number: # Homneassistant Entity controlling servo
     min_value: -100
     initial_value: 0
     max_value: 100
-    step: 5
+    step: 2
     optimistic: true
     set_action:
       then:
@@ -152,8 +152,8 @@ number: # Homneassistant Entity controlling servo
               not:
                 - number.in_range:
                     id: zeiger
-                    above: -90.0
-                    below: 90.0
+                    above: -75.0
+                    below: 75.0
             then:
               - logger.log: "detaching servo in End-position"
               - servo.detach: servo_dial
