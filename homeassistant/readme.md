@@ -2,7 +2,7 @@
 
 I had already a working Home Assistant, so it was just natural to use it as the central hub to control the magic clock.
 
-Home Assistant can use the companion app on users phones to collect location data and access all other kind of information to factor into your magic clock and on the other end can use [..esphome/readme.md](esphome) to connect and control the clock.
+Home Assistant can use the companion app on users phones to collect location data and access all other kind of information to factor into your magic clock and on the other end can use [../esphome/readme.md](esphome) to connect and control the clock.
 
 When connected to the device, it will expose these entities to Home Assistant:
 
