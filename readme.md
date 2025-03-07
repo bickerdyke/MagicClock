@@ -5,7 +5,7 @@ And of course you wanted something like that, too.
 
 **Good News**: I built one and can share my work with you.
 
-![Magic Clock Final](magic clock.jpg)
+![Magic Clock Final](magic_clock.jpg)
 
 **Bad news**: You probably need to adjust each part of my work to your requirements. And it's several parts that need to work together.
 
