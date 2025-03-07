@@ -18,7 +18,7 @@ In addition, intended as a really simple way of two-way conversation, two switch
 
 It turned out that you need to combine several trades to build a magic clock. On the other hand, none of them went into the really advanced stuff and all the tools needed are free and Open Source.
 
-- _Smart Home Platform_: Home Assistant is used to collect all necessary data and control the clocks servo motor.
+- _[homeassistant/readme.md](Smart Home Platform)_: Home Assistant is used to collect all necessary data and control the clocks servo motor.
 - _CAD and 3D-Printing_: The case for the clock was designed using FreeCad
 - _Firmware_: The EspHome-Project is far the easiest way to generate a firmware for ESP32 or similar that connects to Home Assistant
 - _Hardware_: Some sketches of the schematics
