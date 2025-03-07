@@ -2,7 +2,7 @@
 
 I had already a working Home Assistant, so it was just natural to use it as the central hub to control the magic clock.
 
-Home Assistant can use the companion app on users phones to collect location data and access all other kind of information to factor into your magic clock and on the other end can use [..esphome/readme.md](esphome) to connect and control the clock.
+Home Assistant can use the companion app on users phones to collect location data and access all other kind of information to factor into your magic clock and on the other end can use [esphome](../esphome/readme.md) to connect and control the clock.
 
 When connected to the device, it will expose these entities to Home Assistant:
 
@@ -20,9 +20,9 @@ Now we can unleash the power of Home Assistant... The yaml files in this directo
 
 [automation_set_dial_position.yaml](automation_set_dial_position.yaml) connects the selection helper to the servo motor. Each time a new option is selected by the helper, this automation will set the angle of the servo motor accordingly. The stepping for the angle control number entity in theory should be +-100 / number of labels, but in the end depends on your clockface design. Use try and error to find out which values look good and point exactly at your labels.
 
-[automation_set_dial_label.yaml](automation_set_dial_label.yaml) This is where the magic happens. All kind of input is used to decide which label to point to.
+[automation_set_dial_label.yaml](automation_set_dial_label.yaml) This is where the magic happens. All kind of input is used to decide which label to point to:
 
-- GPS fencing from the companion app will result in a position based labels such as "shop", "friends" or "bar"
+- GPS fencing from the companion app will result in a location based labels such as "shop", "friends" or "bar"
 - Events from my Google calendar will show "Working" while in meetings
 - Hue lamps switched on or off are used as a substitute presence indicator for certain rooms.
 - A different (existing) status helper signals sleep or awake and general presence or absence.
@@ -30,7 +30,7 @@ Now we can unleash the power of Home Assistant... The yaml files in this directo
 
 ### Buttons and LEDs
 
-The clock has two buttons (blue and yellow) that toggle the two LEDs next to the buttons on the clockface. (also blue and yellow) Nice but not spectacular. But we can turn that into a low level communication device:
+The clock has two buttons (blue and yellow) that toggle the two LEDs next to the buttons on the clockface. (also blue and yellow) Nice but not spectacular. But we can turn that into a low level 2-way communication device:
 
 [dashboard_signal_buttons.yaml](dashboard_signal_buttons.yaml) gives an example for how to add buttons to your Home Assistant Dashboard that will
 
@@ -43,4 +43,4 @@ Feel free to add any semantics to those two lights. Switch on the yellow light f
 
 ### Source
 
-You can get Home Assistant at [https://www.home-assistant.io/], but you also could use any other way of controlling the clock by using a different esphome configuration.
+You can get Home Assistant at [https://www.home-assistant.io/](https://www.home-assistant.io/), but you also could use any other way of controlling the clock by using a different esphome configuration.
