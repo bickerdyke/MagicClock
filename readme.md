@@ -4,9 +4,10 @@ If you ever read or saw Harry Potter, you may remember the Weasley Family's magi
 And of course you wanted something like that, too.
 
 **Good News**: I built one and can share my work with you.
+
 **Bad news**: You probably need to adjust each part of my work to your requirements. And it's several parts that need to work together.
 
-The clock is meant to give my wive who had to go overseas for several months a way to connect back to me and home by getting live updates, but also make her presence felt by switching the living room light colors.
+The clock was meant to give my wive who had to go overseas for several months a way to connect back to me and home by getting live updates, but also make her presence felt by switching the living room light colors.
 
 ## Overview
 
