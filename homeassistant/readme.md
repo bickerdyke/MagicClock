@@ -39,6 +39,8 @@ The clock has two buttons (blue and yellow) that toggle the two LEDs next to the
 
 Feel free to add any semantics to those two lights. Switch on the yellow light for "Dinner is ready" and the blue one for "call me" or whatever fits the point of your magic clock.
 
+![Dasbhoard Buttons](screenshot_dashboard.png)
+
 [automation_show_clock_signal.yaml](automation_show_clock_signal.yaml) To make sure I notice when the buttons on the clock are pressed, a Hue lamp in the living room will match the color of the pressed button. Phone notifications through the Companion App or Emails or logging would go in here, too.
 
 ### Source
