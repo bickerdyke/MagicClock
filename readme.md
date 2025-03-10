@@ -33,9 +33,9 @@ Detailed descriptions can be found in those folders.
 
 ## 3D-Printing
 
-STL-Files for 3D-Printing the case will be available on printables.com
+STL-Files for 3D-Printing the case are available on [printables.com](https://www.printables.com/model/1224639-magic-clock)
 
-I will be happy to see your results or comments there.
+I will be happy to see your make results or comments there, too.
 
 ## Disclaimer
 
