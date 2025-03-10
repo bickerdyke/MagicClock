@@ -4,7 +4,7 @@ With not much more tools than a 3d-Printer, I wanted the case to be as simple as
 
 ![Sketch Clockface](clock_closed.jpg)
 
-The inside needed space to mount those things, plus the ESP board. The Board is mounted on a separate riser simplify both printing and assembly, and maybe switch do a different board.
+The inside needed space to mount those things, plus the ESP board. The Board is mounted on a separate riser to simplify both printing and assembly, and maybe switch to a different type of board.
 
 ![Sketch Clockface](clock_open.jpg)
 

@@ -25,9 +25,9 @@ It turned out that you need to combine several trades to build a magic clock. On
 
 - _[Smart Home Platform](homeassistant/)_: Home Assistant is used to collect all necessary data and control the clocks servo motor.
 - _[CAD and 3D-Printing](CAD/)_: The case for the clock was designed using FreeCad
-- _Firmware and Network_: The EspHome-Project is far the easiest way to generate a firmware for ESP32 or similar that connects to Home Assistant
+- _[Firmware and Network](esphome/)_: The EspHome-Project is far the easiest way to generate a firmware for ESP32 or similar that connects to Home Assistant
 - _[Hardware](schematics/)_: Some sketches of the schematics
-- _Graphics & Design_: Templates and measurements to help you designing your front plate for the magic clock. I used Scribus.
+- _[Graphics & Design](Images/)_: Templates and measurements to help you designing your front plate for the magic clock. I used Scribus.
 
 Detailed descriptions can be found in those folders.
 
