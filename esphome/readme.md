@@ -9,6 +9,8 @@ The whole Magic Clock system is controlled by an ESP32 Wroom board with an [esph
 - Wifi configuration in your webbrowser
 - VPN
 
+esphome takes a configuratuon file for your project and compiles a firmware for several microcontroller platforms. The configuration file for the Magic Clock is [magic-clock.yaml](magic-clock.yaml). You may need to adjust the file from this repo to your project.
+
 ### Setup
 
 esphome can either use stores credentials to connect to a Wifi network, or, if no such network can be found, will open a configuration wifi network that you can connect to with your phone and set up your wifi. An optional password can be set in the configuration. Default configuration for the setup-wifi is ssid _Magic-Clock Setup_ with password _Foxtrott1308_
