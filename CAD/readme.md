@@ -23,6 +23,8 @@ Case, Cover and mounting plate are simply glued together with hot glue. (Yes, _c
 
 The Dial is screwed on the shaft of the servo using the screw that came with the motor
 
+![final assembly front](finished_front.jpg)
+
 ### Individual Adjustments
 
 In case you want to do your own improvements and adjustments, I included the [FreeCAD](https://www.freecad.org/) model file in this repo. It's a free and open source CAD system.
