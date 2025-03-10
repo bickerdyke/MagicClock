@@ -25,6 +25,8 @@ The Dial is screwed on the shaft of the servo using the screw that came with the
 
 ![final assembly front](finished_front.jpg)
 
+The front will be covered with a printed [clock face](../Images/).
+
 ### Individual Adjustments
 
 In case you want to do your own improvements and adjustments, I included the [FreeCAD](https://www.freecad.org/) model file in this repo. It's a free and open source CAD system.
