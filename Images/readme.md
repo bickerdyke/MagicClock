@@ -2,7 +2,8 @@
 
 The Magic Clock gets its appearance mostly from two images: The clockface and the (optional) picture in the picture holder on the back.
 
-|![Backdrops-Seite001.png]|![Backdrops-Seite002.png]|
+![Backdrop 1](Backdrops-Seite001.png)
+![Backdrop 2](Backdrops-Seite002.png)
 
 Both are created as 11x17cm images that is available as a standard photo size (and can be printed out on actual photo stock) and roughly matches the 15x15cm limits of my 3d-Printer.
 
@@ -10,7 +11,7 @@ They were created using [Scribus](https://www.scribus.net/), free and open sourc
 
 Or if you want to use your favorite graphic suite, you can use these measurements as a guideline:
 
-![Backdrops_measurements.png]
+![Measurements](Backdrops_measurements.png)
 
 ### Sources
 
