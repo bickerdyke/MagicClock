@@ -63,3 +63,10 @@ The Installation guide at [https://esphome.io/guides/getting_started_hassio](htt
 Both options will give you access to the esphome Device manager in your webbrowser where you can add your Magic Clock as a device and upload your individual configuration file, create a firmware file based on it and flash that file on the micro controller.
 
 For further help on esphome check out the Guides and FAQs and tips available on the [esphome homepage](https://esphome.io/).
+
+## Digital Twin
+
+The esphome configuration for the digital twin is found in the file [display.yaml](display.yaml). It acts as a remote control for a "big" version. So it connects to the LED entities provided by the controlled device and has a drop down field to set the input_select entity in the backend that drives the clock hand. If you want to use _only_ a digital version you need to edit the firmware configuration to either provide entities for the two LEDs or add helpers in the back end and use those.
+
+Also, it does _not_ include a Wireguard configuration as that device is staying within my wifi. But you can set it up in the same way as it is included in magic-clock.yaml
+
