@@ -37,6 +37,16 @@ STL-Files for 3D-Printing the case are available on [printables.com](https://www
 
 I will be happy to see your make results or comments there, too.
 
-## Disclaimer
+# Digital Twin
+
+As an alternative to the actual clock with servo and physical dial, there is a simplified version included that uses a digital display. Building is much simpler as the only step neccessary is to clip an easily available esp32-2431S028 (or CYD - cheap yellow display) into a 3D-Printed parts (printable without any supports), flash the firmware and done. It uses a development board that contains both display and controller and the same Home Assistant back end as its "bigger" brother.
+
+![Digital Twin](digital_twin.jpg)
+
+But with one exception: The included esphome configuration acts as a remote control for a "big" version. So it connects to the LED entities provided by the controlled device and has a drop down field to set the input_select entity in the backend that drives the clock hand. If you want to use _only_ a digital version you need to edit the firmware configuration to either provide entities for the two LEDs or add helpers in the back end and use those.
+
+STL-Files for 3D-Printing the case of the digital twin are available on [printables.com](https://www.printables.com/model/1242070-magic-clock-with-display)
+
+# Disclaimer
 
 This is my personal hobby project and it is completely tailored to what I had already running, knew how to do or was ready to learn. Feel free to use my work as inspiration for your own and I would love to learn what you ended up making.

@@ -1,0 +1,598 @@
+#
+# Basic yaml code to get the ESP32-2432S028R display to work in ESPHome.
+# https://github.com/witnessmenow/ESP32-Cheap-Yellow-Display/tree/main/Examples/ESPHome
+#
+
+# ============================================================
+# Example file setup
+# Change the naming below, they will be the names used in Home Assistant
+#
+substitutions:
+  device_name: yellowtft1
+  friendly_name: Yellow TFT 1
+
+# ============================================================
+# Standard ESPHome setup
+#
+# ESPHome naming
+esphome:
+  name: $device_name
+  friendly_name: $friendly_name
+  on_boot:
+    - priority: 0
+      then:
+        lvgl.page.show:
+          id: p_clock
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret display_ApiKey
+
+ota:
+  platform: esphome
+  password: !secret display_OtaSecret
+
+wifi:
+  networks:
+    - ssid: !secret wifi_ssid
+      password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Display Setup"
+    password: "Foxtrott1308"
+
+captive_portal:
+
+time:
+  - platform: homeassistant
+    id: esp_time
+    timezone: Europe/Berlin
+    on_time:
+      - minutes: /15
+        seconds: 27
+        then:
+          - lvgl.label.update:
+              id: lbl_date
+              text:
+                time_format: "%a %F"
+                time: !lambda return id(esp_time).now();
+      - minutes: /1
+        seconds: 0
+        then:
+          - lvgl.label.update:
+              id: lbl_time
+              text:
+                time_format: "%H:%M"
+                time: !lambda return id(esp_time).now();
+      - seconds: 15, 45
+        then:
+          - if:
+              condition:
+                lambda: return id(auto_cycle).state && !id(flag_inUse);
+              then:
+                - lvgl.page.next:
+      - seconds: /1
+        then:
+          - lvgl.bar.update:
+              id: bar_seconds
+              value: !lambda return id(esp_time).now().second;
+
+# ============================================================
+# ESPHome Display related setup
+#
+# Create a font to use, add and remove glyphs as needed.
+
+font:
+  - file:
+      type: gfonts
+      family: Antonio
+      weight: bold # thin, light, regular medium, bold....
+    id: lcars_24
+    size: 24 # default: 20
+    glyphsets: [GF_Latin_Core]
+    glyphs: ["\u203A"]
+
+  - file:
+      type: gfonts
+      family: Antonio
+      weight: bold # thin, light, regular medium, bold....
+    id: lcars_48
+    size: 48
+    glyphsets: [GF_Latin_Core]
+    glyphs: ["\u203A"]
+
+# Create a Home Assistant blue color
+color:
+  - id: color_ha_blue
+    hex: 51c0f2
+  - id: color_clock_buttonborder
+    hex: 135a7a
+  - id: color_light_gray
+    hex: dedcd7
+  - id: color_blue
+    hex: 2667d1
+  - id: color_yellow
+    hex: d4c60d
+
+# Background images
+image:
+  - file: "images/lcars-wallpaper1.png"
+    id: bg_lcars
+    type: RGB565
+  - file: "images/magic-clock.png"
+    id: bg_magicclock
+    type: RGB565
+  - file: "images/Clock2.svg"
+    id: img_magicclock_dial
+    type: RGB565
+    resize: 13x107
+    transparency: alpha_channel
+
+  - file: mdi:alarm-light-outline
+    id: icon_alert
+    type: grayscale
+    transparency: alpha_channel
+    resize: 30x30
+
+# ============================================================
+# Home Assistant related setup
+#
+
+globals:
+  - id: magicclock_statuses
+    type: std::vector<std::string>
+    initial_value: '{"Home","Saloon","Friends","Store","on the Run","working","Family","Outhouse","asleep"}'
+  - id: magicclock_angles
+    type: std::vector<int>
+    initial_value: "{280, 298, 316, 335, 358, 22, 40, 59, 78}"
+  - id: flag_inUse
+    type: boolean
+    initial_value: "false"
+
+select:
+  - platform: template
+    id: sel_displayPage
+    name: Seite
+    icon: mdi:vector-arrange-below
+    options:
+      - Splash
+      - Clock
+      - Magic Clock
+    optimistic: true
+    on_value:
+      - if:
+          condition:
+            lambda: return (x == "Splash");
+          then:
+            - lvgl.page.show:
+                id: p_splash
+      - if:
+          condition:
+            lambda: return (x == "Clock");
+          then:
+            - lvgl.page.show:
+                id: p_clock
+      - if:
+          condition:
+            lambda: return (x == "Magic Clock");
+          then:
+            - lvgl.page.show:
+                id: p_magicclock
+
+number:
+  - platform: template
+    name: LVGL Screen timeout
+    optimistic: true
+    id: display_timeout
+    unit_of_measurement: "min"
+    initial_value: 60
+    restore_value: true
+    min_value: 3
+    max_value: 180
+    step: 1
+    mode: box
+
+switch:
+  - id: auto_cycle
+    platform: template
+    optimistic: true
+    name: Autoimatischer Seitenwechsel
+    icon: mdi:animation
+    restore_mode: ALWAYS_ON
+
+light:
+  - platform: monochromatic
+    output: backlight_pwm
+    name: Display Backlight
+    id: backlight
+    restore_mode: RESTORE_DEFAULT_ON
+
+  - platform: rgb
+    name: RGB
+    id: led
+    red: led_red
+    green: led_green
+    blue: led_blue
+    restore_mode: ALWAYS_OFF
+
+text_sensor:
+  - id: sense_magicclockstatus
+    platform: homeassistant
+    entity_id: input_select.magicclock_positionen
+    on_value:
+      - lvgl.dropdown.update:
+          id: sel_magicclock
+          selected_text: !lambda return x;
+      - if:
+          condition:
+            lambda: return (x == "Home");
+          then:
+            - lvgl.image.update:
+                id: dial_magicclock
+                pivot_x: 7
+                pivot_y: 100
+                angle: 280
+      - if:
+          condition:
+            lambda: return (x == "Saloon");
+          then:
+            - lvgl.image.update:
+                id: dial_magicclock
+                pivot_x: 7
+                pivot_y: 100
+                angle: 298
+      - if:
+          condition:
+            lambda: return (x == "Friends");
+          then:
+            - lvgl.image.update:
+                id: dial_magicclock
+                pivot_x: 7
+                pivot_y: 100
+                angle: 316
+      - if:
+          condition:
+            lambda: return (x == "Store");
+          then:
+            - lvgl.image.update:
+                id: dial_magicclock
+                pivot_x: 7
+                pivot_y: 100
+                angle: 335
+      - if:
+          condition:
+            lambda: return (x == "on the Run");
+          then:
+            - lvgl.image.update:
+                id: dial_magicclock
+                pivot_x: 7
+                pivot_y: 100
+                angle: 358
+      - if:
+          condition:
+            lambda: return (x == "working");
+          then:
+            - lvgl.image.update:
+                id: dial_magicclock
+                pivot_x: 7
+                pivot_y: 100
+                angle: 22
+      - if:
+          condition:
+            lambda: return (x == "Family");
+          then:
+            - lvgl.image.update:
+                id: dial_magicclock
+                pivot_x: 7
+                pivot_y: 100
+                angle: 40
+      - if:
+          condition:
+            lambda: return (x == "Outhouse");
+          then:
+            - lvgl.image.update:
+                id: dial_magicclock
+                pivot_x: 7
+                pivot_y: 100
+                angle: 59
+      - if:
+          condition:
+            lambda: return (x == "asleep");
+          then:
+            - lvgl.image.update:
+                id: dial_magicclock
+                pivot_x: 7
+                pivot_y: 100
+                angle: 78
+
+binary_sensor:
+  - platform: homeassistant
+    id: sense_signal_blue
+    entity_id: switch.magic_clock_light_blue
+    on_state:
+      #      - logger.log:
+      #          format: "Received Status Blue Signal: %s"
+      #          args: [x]
+      - lvgl.widget.update:
+          id: btn_blue_signal
+          state:
+            checked: !lambda return x;
+
+  - platform: homeassistant
+    id: sense_signal_yellow
+    entity_id: switch.magic_clock_light_yellow
+    on_state:
+      #    - logger.log:
+      #        format: "Received Status Yellow Signal: %s"
+      #        args: [x]
+      - lvgl.widget.update:
+          id: btn_yellow_signal
+          state:
+            checked: !lambda return x;
+
+# ============================================================
+# Hardware related setup
+#
+# Setup SPI for the display. The ESP32-2432S028R uses separate SPI buses for display and touch
+spi:
+  - id: tft
+    clk_pin: GPIO14
+    mosi_pin: GPIO13
+    miso_pin: GPIO12
+  - id: touch
+    clk_pin: GPIO25
+    mosi_pin: GPIO32
+    miso_pin: GPIO39
+
+# Setup a pin to control the backlight
+output:
+  - platform: ledc
+    pin: GPIO21
+    id: backlight_pwm
+
+  - platform: ledc
+    pin: GPIO4
+    id: led_red
+    inverted: true
+  - platform: ledc
+    pin: GPIO16
+    id: led_green
+    inverted: true
+  - platform: ledc
+    pin: GPIO17
+    id: led_blue
+    inverted: true
+# Setup the ili9xxx platform
+#
+# Display is used as 240x320 by default so we rotate it to 90°
+#
+# We print date and time wth the strftime() function, see the ESPHome documentation to
+# format date and atime to your locale.
+#
+
+# Set up the xpt2046 touch platform
+touchscreen:
+  platform: xpt2046
+  id: my_touchscreen
+  spi_id: touch
+  cs_pin: GPIO33
+  interrupt_pin: GPIO36
+  update_interval: 50ms
+  threshold: 400
+  calibration:
+    x_min: 270
+    x_max: 3850
+    y_min: 170
+    y_max: 3760
+  transform:
+    swap_xy: true
+    mirror_x: false
+    mirror_y: false
+  on_release:
+    - lambda: id(flag_inUse) = true;
+    - if:
+        condition: lvgl.is_paused
+        then:
+          - logger.log: "LVGL resuming"
+          - lvgl.resume:
+          - lvgl.widget.redraw:
+          - light.turn_on: backlight
+#  on_touch:
+#    - lambda: |-
+#        ESP_LOGI("cal", "x=%d, y=%d, x_raw=%d, y_raw=%0d",
+#            touch.x,
+#            touch.y,
+#            touch.x_raw,
+#            touch.y_raw
+#            );
+
+display:
+  - platform: ili9xxx
+    model: ili9341
+    id: my_display
+    spi_id: tft
+    cs_pin: GPIO15
+    dc_pin: GPIO2
+    rotation: 90
+    color_palette: 8BIT
+    auto_clear_enabled: false
+    update_interval: never
+    invert_colors: false
+
+lvgl:
+  - buffer_size: 25%
+    scroll_with_arrow: true
+    on_idle:
+      - timeout: !lambda "return (id(display_timeout).state * 1000 * 60);"
+        then:
+          - logger.log: "LVGL is idle"
+          - light.turn_off: backlight
+          - lvgl.pause:
+      - timeout: !lambda "return (1000 * 60);"
+        then:
+          - lambda: id(flag_inUse) = false;
+
+    pages:
+      - id: p_splash
+        skip: true
+        bg_image_src: bg_lcars
+        widgets:
+          - obj:
+              align: CENTER
+              width: 90%
+              height: 75%
+              bg_opa: 0
+              border_width: 0
+              widgets:
+                - label:
+                    align: TOP_MID
+                    text: "Pre-Heating"
+                    text_font: lcars_48
+                    text_color: color_ha_blue
+                - label:
+                    align: BOTTOM_MID
+                    text: "Warpcore..."
+                    text_font: lcars_48
+                    text_color: color_ha_blue
+
+      - id: p_magicclock
+        bg_image_src: bg_magicclock
+        widgets:
+          - image:
+              id: dial_magicclock
+              src: img_magicclock_dial
+              align: CENTER
+              y: -20
+              angle: 180
+              pivot_x: 7
+              pivot_y: 100
+          - dropdown:
+              id: sel_magicclock
+              height: 40 # or SIZE_CONTENT
+              align: BOTTOM_MID
+              options:
+                - Home
+                - Saloon
+                - Friends
+                - Store
+                - on the Run
+                - working
+                - Family
+                - Outhouse
+                - asleep
+              dir: TOP
+              symbol: "\u203A"
+              bg_color: color_light_gray
+              bg_opa: 30%
+              border_width: 1
+              border_color: color_clock_buttonborder
+              text_font: lcars_24
+              dropdown_list:
+                bg_color: color_light_gray
+                scrollbar:
+                  width: 30
+                selected:
+                  checked:
+                    bg_color: color_ha_blue
+              on_change:
+                - logger.log:
+                    format: "Selected index is: %d (updating homeassistant)"
+                    args: [x]
+                - homeassistant.action:
+                    action: input_select.select_option
+                    data:
+                      entity_id: input_select.magicclock_positionen
+                      option: !lambda "return id(magicclock_statuses)[int(x)];"
+          - button:
+              id: btn_blue_signal
+              checkable: true
+              align: BOTTOM_LEFT
+              height: 40 # or SIZE_CONTENT
+              bg_color: color_light_gray
+              bg_opa: 30%
+              border_width: 1
+              border_color: color_clock_buttonborder
+              checked:
+                bg_color: color_blue
+              widgets:
+                - image:
+                    align: center
+                    src: icon_alert
+              on_short_click:
+                #- logger.log:
+                #    format: "Blue button pressed: %s (updating homeassistant)"
+                #    args: [x]
+                - homeassistant.action:
+                    action: switch.toggle
+                    data:
+                      entity_id: switch.magic_clock_light_blue
+          - button:
+              id: btn_yellow_signal
+              checkable: true
+              align: BOTTOM_RIGHT
+              height: 40 # or SIZE_CONTENT
+              bg_color: color_light_gray
+              bg_opa: 30%
+              border_width: 1
+              border_color: color_clock_buttonborder
+              checked:
+                bg_color: color_yellow
+                bg_opa: COVER
+              widgets:
+                - image:
+                    align: center
+                    src: icon_alert
+              on_short_click:
+                #- logger.log:
+                #    format: "Yellow button pressed: %s (updating homeassistant)"
+                #    args: [x]
+                - homeassistant.action:
+                    action: switch.toggle
+                    data:
+                      entity_id: switch.magic_clock_light_yellow
+
+      - id: p_clock
+        bg_image_src: bg_lcars
+        widgets:
+          - obj:
+              align: CENTER
+              width: 90%
+              height: 75%
+              bg_opa: 0
+              border_width: 0
+              widgets:
+                - label:
+                    id: lbl_date
+                    align: TOP_MID
+                    text:
+                      time_format: "%a %F"
+                      time: !lambda return id(esp_time).now();
+                    text_font: lcars_24
+                    text_color: color_ha_blue
+                - label:
+                    id: lbl_time
+                    align: CENTER
+                    text:
+                      time_format: "%H:%M"
+                      time: !lambda return id(esp_time).now();
+                    text_font: lcars_48
+                    text_color: color_ha_blue
+                - bar:
+                    id: bar_seconds
+                    align: BOTTOM_MID
+                    anim_time: 200ms
+                    animated: true
+                    indicator:
+                      bg_color: color_ha_blue
+                    max_value: 59
+                    value: 0

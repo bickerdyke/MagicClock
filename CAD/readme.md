@@ -27,6 +27,12 @@ The Dial is screwed on the shaft of the servo using the screw that came with the
 
 The front will be covered with a printed [clock face](../Images/).
 
-### Individual Adjustments
+## Digital Twin
+
+The model for the version with a digital display uses a transparent back to hold the display in place and keep the included RGB LED visible. There is also a holder for a pen that came with my display.
+
+![Digital Magic Clock Backside](digital_twin_back.jpg)
+
+## Individual Adjustments
 
 In case you want to do your own improvements and adjustments, I included the [FreeCAD](https://www.freecad.org/) model file in this repo. It's a free and open source CAD system.

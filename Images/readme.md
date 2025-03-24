@@ -28,3 +28,6 @@ I used images available on Wikimedia Commons, so I won't include them in this re
 
 #### Dummy-User
 The person used here is a dummy user profile picture created by [https://randomuser.me/photos](https://randomuser.me/photos)
+
+### Digital Dial
+The dial for the digital twin of the clock is based on [Clock2](https://commons.wikimedia.org/wiki/File:Clock2.svg) by Wikipedia-User [Fornax](https://commons.wikimedia.org/wiki/User:Fornax) licensed under the Creative Commons Attribution-Share Alike 3.0 Unported license.
