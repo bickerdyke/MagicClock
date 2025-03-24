@@ -29,8 +29,14 @@ The front will be covered with a printed [clock face](../Images/).
 
 ## Digital Twin
 
+It was supposed to be much smaller than the actual magic clock, but to hold the rectangular board with the display and keep the same shape as the full version, it ended up almost the same size:
+
+![Digital Magic Clock CAD](digital_twin_cad.png)
+![Digital Magic Clock CAD open](digital_twin_cad_back_open.png)
+
 The model for the version with a digital display uses a transparent back to hold the display in place and keep the included RGB LED visible. There is also a holder for a pen that came with my display.
 
+![Digital Magic Clock CAD back](digital_twin_cad_back.png)
 ![Digital Magic Clock Backside](digital_twin_back.jpg)
 
 ## Individual Adjustments
